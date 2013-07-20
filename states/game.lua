@@ -25,7 +25,7 @@ end
 
 
 function state:joystickpressed(joystick, button)
-
+	print("pressed : "..joystick)
 end
 
 
@@ -55,7 +55,9 @@ end
 
 
 function state:draw()
-	love.graphics.print("Game !!!", 400, 300)
+	-- game	
+	player.draw()
+	-- hud
 	if players[1] then 
 		huds[1]:draw(100,500)
 	end

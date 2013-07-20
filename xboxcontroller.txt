@@ -11,3 +11,10 @@ Liste des boutons dans love2D :
 10 -> press joystick gauche
 11 -> press joystick droit
 
+Directions :
+Joystick 1 : joystick de gauche (droite gauche)
+Joystick 2 : joystick de gauche (haut bas)
+Joystick 3 : gachette gauche
+Joystick 4 : joystick de droite (droite gauche)
+Joystick 5 : joystick de droite (haut bas)
+Joystick 6 : gachette de droite
