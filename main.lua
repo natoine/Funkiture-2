@@ -28,6 +28,10 @@ function love.joystickpressed(joystick, button)
 	gstate.joystickpressed(joystick, button)
 end
 
+function love.joystickreleased(joystick, button)
+	gstate.joystickreleased(joystick, button)
+end
+
 function love.update(dt)
 	gstate.update(dt)
 end

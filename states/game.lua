@@ -25,12 +25,12 @@ end
 
 
 function state:joystickpressed(joystick, button)
-	print("pressed : "..joystick)
+	player.joystickpressed(joystick, button)
 end
 
 
 function state:joystickreleased(joystick, button)
-
+	player.joystickreleased(joystick, button)
 end
 
 
