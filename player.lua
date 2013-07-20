@@ -1,4 +1,4 @@
-local player_mt = {x = 100, speed = 10, life = 100, score = 0, combo = 0}
+local player_mt = {x = 100, speed = 50, life = 100, score = 0, combo = 0}
 local player = {}
 
 player.all = {}
@@ -44,8 +44,9 @@ end
 
 -- Retourne un tableau : en première case (x) et en deuxième case (y)
 function player_mt:getDirection()
-	local abscisses = love.joystick.getAxis(self.number, 1);
-	local ordonnees = love.joystick.getAxis(self.number, 2);	
+	local abscisses = love.joystick.getAxis(self.number, 1)
+	local ordonnees = love.joystick.getAxis(self.number, 2)	
+	return {abscisses , ordonnees}
 end
 
 function player_mt:isAButtonPressed()
@@ -89,14 +90,11 @@ function player_mt:update(dt)
 			self.curframe = 1
 		end
 	end	
-
-	--etat / cycle
-	
-
 	--deplacement
-	if love.keyboard.isDown("left") then
-		self.x = self.x - self.speed * dt
-	end
+	local intensity = self:getDirection()
+	local xintensity = intensity[1]
+	--print(xintensity)
+	self.x = self.x + self.speed * xintensity * dt
 	
 	if love.keyboard.isDown("right") then
 		self.x = self.x + self.speed * dt
