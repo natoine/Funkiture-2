@@ -40,6 +40,7 @@ function state:joystickpressed(joystick, button)
 		if joystick == 4 then
 			player4 = true
 		end
+		countPlayers = 1
 		gstate.switch(choosePlayer)
 	end
 end

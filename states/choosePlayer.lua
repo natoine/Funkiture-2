@@ -33,33 +33,54 @@ end
 function state:joystickpressed(joystick, button)
 	-- gérer le joueur qui presse start pour entrer dans le jeu Button 8 == start
 	if button == 8 then
-		if joystick == 1 then
+		if joystick == 1 and not player1 then
 			player1 = true
+			countPlayers = countPlayers + 1
 		end
-		if joystick == 2 then
+		if joystick == 2 and not player2  then
 			player2 = true
+			countPlayers = countPlayers + 1
 		end
-		if joystick == 3 then
+		if joystick == 3 and not player3  then
 			player3 = true
+			countPlayers = countPlayers + 1
 		end
-		if joystick == 4 then
+		if joystick == 4 and not player4  then
 			player4 = true
+			countPlayers = countPlayers + 1
 		end
 	end
-	-- gérer le joueur qui a fait son choix et est prêt à jouer Button 1 == A	
+	-- gérer le joueur qui a fait son choix et est prêt à jouer Button 1 == A
 	if button == 1 then
-		if joystick == 1 then
+		if player1 and joystick == 1 then
 			j1Ready = true
 		end
-		if joystick == 2 then
+		if player2 and joystick == 2 then
 			j2Ready = true
 		end
-		if joystick == 3 then
+		if player3 and joystick == 3 then
 			j3Ready = true
 		end
-		if joystick == 4 then
+		if player4 and joystick == 4 then
 			j4Ready = true
 		end
+	end
+	-- Tester si tous les joueurs sont prêts pour lancer la partie
+	local playerReady = 0
+	if j1Ready then
+		playerReady = playerReady + 1
+	end
+	if j2Ready then
+		playerReady = playerReady + 1
+	end
+	if j3Ready then
+		playerReady = playerReady + 1
+	end
+	if j4Ready then
+		playerReady = playerReady + 1
+	end
+	if playerReady > 0 and playerReady == countPlayers then
+		gstate.switch(game)
 	end
 end
 

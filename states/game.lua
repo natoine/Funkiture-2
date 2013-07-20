@@ -56,7 +56,7 @@ end
 
 
 function state:draw()
-
+	love.graphics.print("Game !!!", 400, 300)
 end
 
 return state
