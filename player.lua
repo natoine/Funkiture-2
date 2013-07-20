@@ -1,16 +1,34 @@
-local player_mt = {x = 100, speed = 10, life = 100, score = 0, combo = 0}
+local player_mt = {x = 100, speed = 50, life = 100, score = 0, combo = 0}
 local player = {}
 
 player.all = {}
+player.quad = {}
+for i=1, 8 do
+	table.insert (player.quad, love.graphics.newQuad(128*(i-1),0,128,128,1024,128))
+end
+
+player.cycles = {}
+player.cycles.idle = {1}
+player.cycles.walk = {2, 3, 4, 3}
+player.cycles.punch = {5, 6}
+player.cycles.kick = {7, 8}
+
+frametime = 1/10
 
 function player.new(number)
 	local self = setmetatable({},{__index = player_mt})
 	self.number = number
+	self.image = love.graphics.newImage("resources/textures/jackson"..number..".png")
+	self.currentcycle = player.cycles.idle
+	self.frame = 1
+	self.curframe = 1
+	self.dtime = 0
+	self.timer = 0
 	table.insert(player.all , self)
 	return self
 end
 
-function player.update(dt)
+function player.update(dt)	
 	--kevin purge
 	local i = 1
 	while i <= #player.all do
@@ -26,8 +44,9 @@ end
 
 -- Retourne un tableau : en première case (x) et en deuxième case (y)
 function player_mt:getDirection()
-	local abscisses = love.joystick.getAxis(self.number, 1);
-	local ordonnees = love.joystick.getAxis(self.number, 2);	
+	local abscisses = love.joystick.getAxis(self.number, 1)
+	local ordonnees = love.joystick.getAxis(self.number, 2)	
+	return {abscisses , ordonnees}
 end
 
 function player_mt:isAButtonPressed()
@@ -46,16 +65,36 @@ end
 
 function player.joystickpressed(joystick, button)
 	-- ici lancer l'animation correspondante au joueur
+	if button == 3 then	
+		players[joystick].currentcycle = player.cycles.punch
+	end
+	if button == 1 then
+		players[joystick].currentcycle = player.cycles.kick
+	end
 end
 
 function player.joystickreleased(joystick, button)
 	-- ici arreter l'animation courante et mettre idle
+	players[joystick].currentcycle = player.cycles.idle
+	players[joystick].curframe = 1
 end
 
 function player_mt:update(dt)
-	if love.keyboard.isDown("left") then
-		self.x = self.x - self.speed * dt
-	end
+	-- anim
+	self.dtime = self.dtime + dt
+	self.timer = self.timer+dt
+	if self.timer>frametime then
+		self.timer = self.timer - frametime
+		self.curframe = self.curframe + 1
+		if self.curframe > #self.currentcycle then
+			self.curframe = 1
+		end
+	end	
+	--deplacement
+	local intensity = self:getDirection()
+	local xintensity = intensity[1]
+	--print(xintensity)
+	self.x = self.x + self.speed * xintensity * dt
 	
 	if love.keyboard.isDown("right") then
 		self.x = self.x + self.speed * dt
@@ -63,9 +102,11 @@ function player_mt:update(dt)
 end
 
 function player_mt:draw()
-	--penser à centrer en faisant pos X - hauteur / 2, pos Y - largeur /2
-	love.graphics.rectangle("fill", self.x - 50 / 2, 100 - 50 / 2, 50, 50)
-	
+	love.graphics.drawq(self.image,player.quad[self.currentcycle[self.curframe]],self.x,100)
+	if self.dtime>100 then 
+		self.frame = self.frame + 1
+		self.dtime = 0
+	end
 end
 
 return player

@@ -66,13 +66,13 @@ function state:keyreleased(key, uni)
 end
 
 
-function state:update(dt)
-	
+function state:update(dt)	
 end
 
 
 function state:draw()
+	love.graphics.setBackgroundColor(255,255,255)
+	love.graphics.setColor(0,0,0)
 	love.graphics.print("Press Start Button", 400, 300)
 end
-
 return state
