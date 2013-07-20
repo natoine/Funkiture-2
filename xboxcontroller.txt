@@ -1,0 +1,13 @@
+Liste des boutons dans love2D :
+1 -> A
+2 -> B
+3 -> X
+4 -> Y
+5 -> up gachette gauche
+6 -> up gachette droite
+7 -> back
+8 -> start
+9 -> bouton XBox middle
+10 -> press joystick gauche
+11 -> press joystick droit
+

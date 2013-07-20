@@ -26,7 +26,9 @@ end
 
 
 function state:joystickpressed(joystick, button)
-
+	if joystick == 1 then
+		print(button)
+	end
 end
 
 
@@ -56,7 +58,7 @@ end
 
 
 function state:draw()
-
+	love.graphics.print("Press Start Button", 400, 300)
 end
 
 return state
