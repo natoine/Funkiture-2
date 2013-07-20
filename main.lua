@@ -1,4 +1,5 @@
 function love.load()
+	gstate = require "gamestate"
 end
 
 function love.update(dt)
