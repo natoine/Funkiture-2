@@ -25,7 +25,6 @@ end
 
 
 function state:joystickpressed(joystick, button)
-	print("pressed : "..joystick)
 end
 
 
