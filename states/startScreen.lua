@@ -26,8 +26,21 @@ end
 
 
 function state:joystickpressed(joystick, button)
-	if joystick == 1 then
-		print(button)
+	-- Button 8 == start	
+	if button == 8 then
+		if joystick == 1 then
+			player1 = true
+		end
+		if joystick == 2 then
+			player2 = true
+		end
+		if joystick == 3 then
+			player3 = true
+		end
+		if joystick == 4 then
+			player4 = true
+		end
+		gstate.switch(choosePlayer)
 	end
 end
 
