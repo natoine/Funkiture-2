@@ -59,16 +59,16 @@ function state:draw()
 	player.draw()
 	-- hud
 	if players[1] then 
-		huds[1]:draw(100,500)
+		huds[1]:draw(20,70)
 	end
 	if players[2] then
-		huds[2]:draw(300,500)
+		huds[2]:draw(210,70)
 	end
 	if players[3] then 
-		huds[3]:draw(500,500)
+		huds[3]:draw(400,70)
 	end
 	if players[4] then 
-		huds[4]:draw(700,500)
+		huds[4]:draw(590,70)
 	end
 end
 
