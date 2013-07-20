@@ -1,5 +1,10 @@
 local state = gstate.new()
 
+image = love.graphics.newImage("resources/textures/menu.png")
+timer = 0
+frametime = 1/10
+angle = 0
+
 function state:init()
 
 end
@@ -65,14 +70,19 @@ function state:keyreleased(key, uni)
 
 end
 
-
-function state:update(dt)	
+function state:update(dt)
+	timer = timer+dt
+	if timer > frametime then
+		angle = angle + 1
+		timer = timer - frametime
+	end
 end
-
 
 function state:draw()
 	love.graphics.setBackgroundColor(255,255,255)
 	love.graphics.setColor(0,0,0)
 	love.graphics.print("Press Start Button", 400, 300)
+	love.graphics.draw(image,love.graphics.getWidth()/2,love.graphics.getHeight()/2,angle*math.pi*1/24,1.5,1.5,250,174)
 end
+
 return state

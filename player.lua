@@ -67,9 +67,11 @@ function player.joystickpressed(joystick, button)
 	-- ici lancer l'animation correspondante au joueur
 	if button == 3 then	
 		players[joystick].currentcycle = player.cycles.punch
+		players[joystick].curframe = 1
 	end
 	if button == 1 then
 		players[joystick].currentcycle = player.cycles.kick
+		players[joystick].curframe = 1
 	end
 end
 
@@ -93,9 +95,19 @@ function player_mt:update(dt)
 	--deplacement
 	local intensity = self:getDirection()
 	local xintensity = intensity[1]
-	--print(xintensity)
+	local lastX = self.x	
 	self.x = self.x + self.speed * xintensity * dt
-	
+	--print(lastX - self.x)
+	--0.03 seuil empririque TODO passer en variable 
+	if self.currentcycle == player.cycles.idle and ( lastX - self.x > 0.03 or lastX - self.x < -0.03) then
+		self.currentcycle = player.cycles.walk
+		self.curframe = 1
+ 	elseif self.currentcycle == player.cycles.walk then
+		if lastX - self.x < 0.03 and lastX - self.x > -0.03 then
+			self.currentcycle = player.cycles.idle
+			self.curframe = 1
+		end
+	end
 	if love.keyboard.isDown("right") then
 		self.x = self.x + self.speed * dt
 	end		
