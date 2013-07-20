@@ -110,43 +110,44 @@ end
 function state:draw()
 	if player1 then
 		if j1Ready then
-			love.graphics.print("Player 1 Ready !", 100, 500)
+			--sentences are set to an abscisse in accordance with the screen's length--
+			love.graphics.print("Player 1 Ready !", ((love.graphics.getWidth()/4)-100)/2, 500)
 		else
-			love.graphics.print("Choose Your Character.", 100, 300)
-			love.graphics.print("When ready press A.", 100, 350)
+			love.graphics.print("Choose Your Character.", ((love.graphics.getWidth()/4)-100)/2, 300)
+			love.graphics.print("When ready press A.", ((love.graphics.getWidth()/4)-100)/2, 350)
 		end
 	else
-		love.graphics.print("Press Start Button", 100, 300)
+		love.graphics.print("Press Start Button",((love.graphics.getWidth()/4)-100)/2, 300)
 	end
 	if player2 then
 		if j2Ready then
-			love.graphics.print("Player 2 Ready !", 300, 500)
+			love.graphics.print("Player 2 Ready !", (((love.graphics.getWidth()/4)-100)*3/2)+100, 500)
 		else
-			love.graphics.print("Choose Your Character.", 300, 300)
-			love.graphics.print("When ready press A.", 300, 350)
+			love.graphics.print("Choose Your Character.", (((love.graphics.getWidth()/4)-100)*3/2)+100, 300)
+			love.graphics.print("When ready press A.", (((love.graphics.getWidth()/4)-100)*3/2)+100, 350)
 		end
 	else
-		love.graphics.print("Press Start Button", 300, 300)
+		love.graphics.print("Press Start Button",(((love.graphics.getWidth()/4)-100)*3/2)+100, 300)
 	end
 	if player3 then
 		if j3Ready then
-			love.graphics.print("Player 3 Ready !", 500, 500)
+			love.graphics.print("Player 3 Ready !", (((love.graphics.getWidth()/4)-100)*5/2)+2*100, 500)
 		else
-			love.graphics.print("Choose Your Character.", 500, 300)
-			love.graphics.print("When ready press A.", 500, 350)
+			love.graphics.print("Choose Your Character.", (((love.graphics.getWidth()/4)-100)*5/2)+2*100, 300)
+			love.graphics.print("When ready press A.", (((love.graphics.getWidth()/4)-100)*5/2)+2*100, 350)
 		end
 	else
-		love.graphics.print("Press Start Button", 500, 300)
+		love.graphics.print("Press Start Button",(((love.graphics.getWidth()/4)-100)*5/2)+2*100, 300)
 	end
 	if player4 then
 		if j4Ready then
-			love.graphics.print("Player 4 Ready !", 700, 500)
+			love.graphics.print("Player 4 Ready !", (((love.graphics.getWidth()/4)-100)*7/2)+3*100, 500)
 		else
-			love.graphics.print("Choose Your Character.", 700, 300)
-			love.graphics.print("When ready press A.", 700, 350)
+			love.graphics.print("Choose Your Character.", (((love.graphics.getWidth()/4)-100)*7/2)+3*100, 300)
+			love.graphics.print("When ready press A.", (((love.graphics.getWidth()/4)-100)*7/2)+3*100, 350)
 		end
 	else
-		love.graphics.print("Press Start Button", 700, 300)
+		love.graphics.print("Press Start Button", (((love.graphics.getWidth()/4)-100)*7/2)+3*100, 300)
 	end
 end
 
