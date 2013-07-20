@@ -51,18 +51,23 @@ function state:joystickpressed(joystick, button)
 		end
 	end
 	-- gérer le joueur qui a fait son choix et est prêt à jouer Button 1 == A
+	-- créer les joueurs aussi
 	if button == 1 then
 		if player1 and joystick == 1 then
 			j1Ready = true
+			players[1] = player.new(1)
 		end
 		if player2 and joystick == 2 then
 			j2Ready = true
+			players[2] = player.new(2)
 		end
 		if player3 and joystick == 3 then
 			j3Ready = true
+			players[3] = player.new(3)
 		end
 		if player4 and joystick == 4 then
 			j4Ready = true
+			players[4] = player.new(4)
 		end
 	end
 	-- Tester si tous les joueurs sont prêts pour lancer la partie

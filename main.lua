@@ -6,6 +6,9 @@ function love.load()
 	game = require("states/game")
 	gstate.switch(startScreen)
 
+	--import de player
+	player = require("player")
+
 	-- variables pour savoir qui va jouer
 	player1 = false
 	player2 = false
@@ -13,6 +16,8 @@ function love.load()
 	player4 = false
 	-- variable pour connaître le nombre de joueurs
 	countPlayers = 0
+	--tableau des joueurs
+	players = {}
 end
 
 function love.joystickpressed(joystick, button)
