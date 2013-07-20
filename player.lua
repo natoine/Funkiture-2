@@ -2,15 +2,33 @@ local player_mt = {x = 100, speed = 10, life = 100, score = 0, combo = 0}
 local player = {}
 
 player.all = {}
+player.quad = {}
+for i=1, 8 do
+	table.insert (player.quad, love.graphics.newQuad(128*(i-1),0,128,128,1024,128))
+end
+
+player.cycles = {}
+player.cycles.idle = {1}
+player.cycles.walk = {2, 3, 4, 3}
+player.cycles.punch = {5, 6}
+player.cycles.kick = {7, 8}
+
+dtime = 0
+timer = 0
+curframe = 1
+frametime = 1/10
+frame = 1
 
 function player.new(number)
 	local self = setmetatable({},{__index = player_mt})
 	self.number = number
+	self.image = love.graphics.newImage("resources/textures/jackson"..number..".png")
+	self.currentcycle = player.cycles.idle
 	table.insert(player.all , self)
 	return self
 end
 
-function player.update(dt)
+function player.update(dt)	
 	--kevin purge
 	local i = 1
 	while i <= #player.all do
@@ -53,6 +71,20 @@ function player.joystickreleased(joystick, button)
 end
 
 function player_mt:update(dt)
+	-- anim
+	dtime = dtime + dt
+	timer = timer+dt
+	if timer>frametime then
+		timer = timer - frametime
+		curframe = curframe + 1
+		if curframe > #self.currentcycle then
+			curframe = 1
+		end
+	end	
+
+	--etat / cycle	
+
+	--deplacement
 	if love.keyboard.isDown("left") then
 		self.x = self.x - self.speed * dt
 	end
@@ -63,9 +95,11 @@ function player_mt:update(dt)
 end
 
 function player_mt:draw()
-	--penser à centrer en faisant pos X - hauteur / 2, pos Y - largeur /2
-	love.graphics.rectangle("fill", self.x - 50 / 2, 100 - 50 / 2, 50, 50)
-	
+	love.graphics.drawq(self.image,player.quad[self.currentcycle[curframe]],self.x,100)
+	if dtime>100 then 
+		frame = frame + 1
+		dtime = 0
+	end
 end
 
 return player

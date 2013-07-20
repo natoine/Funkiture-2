@@ -1,20 +1,4 @@
 local state = gstate.new()
-image = love.graphics.newImage("resources/textures/jackson1.png")
-quad = {}
-for i=1, 8 do
-	table.insert (quad, love.graphics.newQuad(128*(i-1),0,128,128,image:getWidth(),image:getHeight()))
-end
-cycles = {}
-cycles.idle = {1}
-cycles.walk = {2, 3, 4, 3}
-cycles.punch = {5, 6}
-cycles.kick = {7, 8}
-currentcycle = cycles.walk
-curframe = 1
-timer = 0
-frametime = 1/10
-dtime = 0
-frame = 1
 
 function state:init()
 
@@ -82,17 +66,7 @@ function state:keyreleased(key, uni)
 end
 
 
-function state:update(dt)
-	dtime = dtime + dt
-	timer = timer+dt
-	if timer>frametime then
-		timer = timer - frametime
-		curframe = curframe + 1
-		if curframe > #currentcycle then
-			curframe = 1
-		end
-	end
-		
+function state:update(dt)	
 end
 
 
@@ -100,10 +74,5 @@ function state:draw()
 	love.graphics.setBackgroundColor(255,255,255)
 	love.graphics.setColor(0,0,0)
 	love.graphics.print("Press Start Button", 400, 300)
-	love.graphics.drawq(image,quad[currentcycle[curframe]],134,168)
-	if dtime>100 then 
-		frame = frame + 1
-		dtime = 0
-	end
 end
 return state
