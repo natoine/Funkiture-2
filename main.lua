@@ -8,6 +8,8 @@ function love.load()
 
 	--import de player
 	player = require("player")
+	--import de hud--
+	hud = require("hud")
 
 	-- variables pour savoir qui va jouer
 	player1 = false
@@ -18,6 +20,8 @@ function love.load()
 	countPlayers = 0
 	--tableau des joueurs
 	players = {}
+	--tableau des huds--
+	huds = {}
 end
 
 function love.joystickpressed(joystick, button)

@@ -57,16 +57,16 @@ end
 function state:draw()
 	love.graphics.print("Game !!!", 400, 300)
 	if players[1] then 
-		love.graphics.print("player 1 : ".. players[1].life , 100, 500);
+		huds[1]:draw(100,500)
 	end
 	if players[2] then
-		love.graphics.print("player 2 : ".. players[2].life  , 300, 500);
+		huds[2]:draw(300,500)
 	end
 	if players[3] then 
-		love.graphics.print("player 3 : ".. players[3].life  , 500, 500);
+		huds[3]:draw(500,500)
 	end
 	if players[4] then 
-		love.graphics.print("player 4 : ".. players[4].life  , 700, 500);
+		huds[4]:draw(700,500)
 	end
 end
 
