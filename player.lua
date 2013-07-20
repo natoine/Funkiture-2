@@ -15,15 +15,15 @@ player.cycles.kick = {7, 8}
 
 dtime = 0
 timer = 0
-curframe = 1
 frametime = 1/10
-frame = 1
 
 function player.new(number)
 	local self = setmetatable({},{__index = player_mt})
 	self.number = number
 	self.image = love.graphics.newImage("resources/textures/jackson"..number..".png")
 	self.currentcycle = player.cycles.idle
+	self.frame = 1
+	self.curframe = 1
 	table.insert(player.all , self)
 	return self
 end
@@ -64,10 +64,18 @@ end
 
 function player.joystickpressed(joystick, button)
 	-- ici lancer l'animation correspondante au joueur
+	if button == 3 then	
+		players[joystick].currentcycle = player.cycles.punch
+	end
+	if button == 1 then
+		players[joystick].currentcycle = player.cycles.kick
+	end
 end
 
 function player.joystickreleased(joystick, button)
 	-- ici arreter l'animation courante et mettre idle
+	players[joystick].currentcycle = player.cycles.idle
+	players[joystick].curframe = 1
 end
 
 function player_mt:update(dt)
@@ -76,13 +84,14 @@ function player_mt:update(dt)
 	timer = timer+dt
 	if timer>frametime then
 		timer = timer - frametime
-		curframe = curframe + 1
-		if curframe > #self.currentcycle then
-			curframe = 1
+		self.curframe = self.curframe + 1
+		if self.curframe > #self.currentcycle then
+			self.curframe = 1
 		end
 	end	
 
-	--etat / cycle	
+	--etat / cycle
+	
 
 	--deplacement
 	if love.keyboard.isDown("left") then
@@ -95,9 +104,9 @@ function player_mt:update(dt)
 end
 
 function player_mt:draw()
-	love.graphics.drawq(self.image,player.quad[self.currentcycle[curframe]],self.x,100)
+	love.graphics.drawq(self.image,player.quad[self.currentcycle[self.curframe]],self.x,100)
 	if dtime>100 then 
-		frame = frame + 1
+		self.frame = self.frame + 1
 		dtime = 0
 	end
 end
