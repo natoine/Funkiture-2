@@ -4,7 +4,6 @@ local j2Ready = false
 local j3Ready = false
 local j4Ready = false
 
-
 function state:init()
 
 end
@@ -18,17 +17,6 @@ end
 function state:focus()
 
 end
-
-
-function state:mousepressed(x, y, btn)
-
-end
-
-
-function state:mousereleased(x, y, btn)
-
-end
-
 
 function state:joystickpressed(joystick, button)
 	-- gérer le joueur qui presse start pour entrer dans le jeu Button 8 == start
