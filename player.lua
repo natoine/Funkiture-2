@@ -13,8 +13,6 @@ player.cycles.walk = {2, 3, 4, 3}
 player.cycles.punch = {5, 6}
 player.cycles.kick = {7, 8}
 
-dtime = 0
-timer = 0
 frametime = 1/10
 
 function player.new(number)
@@ -24,6 +22,8 @@ function player.new(number)
 	self.currentcycle = player.cycles.idle
 	self.frame = 1
 	self.curframe = 1
+	self.dtime = 0
+	self.timer = 0
 	table.insert(player.all , self)
 	return self
 end
@@ -81,10 +81,10 @@ end
 
 function player_mt:update(dt)
 	-- anim
-	dtime = dtime + dt
-	timer = timer+dt
-	if timer>frametime then
-		timer = timer - frametime
+	self.dtime = self.dtime + dt
+	self.timer = self.timer+dt
+	if self.timer>frametime then
+		self.timer = self.timer - frametime
 		self.curframe = self.curframe + 1
 		if self.curframe > #self.currentcycle then
 			self.curframe = 1
@@ -103,9 +103,9 @@ end
 
 function player_mt:draw()
 	love.graphics.drawq(self.image,player.quad[self.currentcycle[self.curframe]],self.x,100)
-	if dtime>100 then 
+	if self.dtime>100 then 
 		self.frame = self.frame + 1
-		dtime = 0
+		self.dtime = 0
 	end
 end
 
