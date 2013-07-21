@@ -1,7 +1,5 @@
 local player_mt = {x = 100, speed = 50, life = 100, score = 0, combo = 0, left = false}
 local player = {}
---local kickdamage = 10--
---local punchdamage = 10--
 
 player.all = {}
 player.quad = {}
