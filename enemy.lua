@@ -25,7 +25,7 @@ kickDamage = 2
 nbEnemyGenerated = 0
 
 --pour gerer la distance au spawn et la distance au player
-distanceBtwEnemies = 50
+distanceBtwEnemies = 60
 
 function enemy.new(number, enemytype)
 	local self = setmetatable({},{__index = enemy_mt})
@@ -86,16 +86,20 @@ function enemy_mt:update(dt)
 	
 	--tapera ou tapera pas
 	local nearestPlayerInfo = self:seekNearestPlayer()
-	if nearestPlayerInfo[2] < distanceBtwEnemies and not (self.currentcycle == enemy.cycles.punch or self.currentcycle == enemy.cycles.kick) then
-		if ( nearestPlayerInfo[1] == 1 and self.left) or (nearestPlayerInfo[1] == -1 and not self.left) then
-			local testKick = math.random(1)
-			if testKick > 0.5 then 
-				self.currentcycle = enemy.cycles.kick
-				self.curframe = 1
-			else 
-				self.currentcycle = enemy.cycles.punch
-				self.curframe = 1
+	if self.currentcycle == enemy.cycles.walk then
+		print("distance :"..nearestPlayerInfo[2])
+		if nearestPlayerInfo[2] < distanceBtwEnemies then
+			if ( nearestPlayerInfo[1] == 1 and self.left) or (nearestPlayerInfo[1] == -1 and not self.left) then
+				local testKick = math.random(1)
+				if testKick > 0.5 then 
+					self.currentcycle = enemy.cycles.kick
+					self.curframe = 1
+				else 
+					self.currentcycle = enemy.cycles.punch
+					self.curframe = 1
+				end
 			end
+		else self.currentcycle = enemy.cycles.walk
 		end
 	end
 	-- anim
@@ -115,6 +119,9 @@ function enemy_mt:update(dt)
 			end
 		end
 			if self.curframe > #self.currentcycle then
+				if not(self.currentcycle == enemy.cycles.walk) then
+					self.currentcycle = enemy.cycles.walk	
+				end			
 				self.curframe = 1
 			end
 		end
@@ -174,8 +181,6 @@ function enemy_mt:draw()
 	love.graphics.setColor(255,255,255)
 	
 	if self.left then
-		print("x : "..self.x)
-		print("curframe : "..self.curframe)
 		love.graphics.drawq(self.image, enemy.quad[self.currentcycle[self.curframe]], self.x - 64, 400, 0, -1, 1, 64 , 64 )	
 	else
 		love.graphics.drawq(self.image, enemy.quad[self.currentcycle[self.curframe]], self.x, 400, 0, 1, 1, 64 , 64 )
