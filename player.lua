@@ -65,18 +65,6 @@ function player_mt:isXButtonPressed()
 	return love.joystick.isDown(self.number, 3)
 end
 
---function player_mt:setLife(x)
-	--self.life = self.life + x
---end--
-
---function player_mt:punchAttack(player)
-	--player:setLife(punchdamage)
---end--
-
---function player_mt:kickAttack(player)--
---	player:setLife(kickdamage)--
---end--
-
 function player.draw()
 	for i , v in ipairs(player.all) do
 		v:draw()
@@ -144,9 +132,6 @@ function player_mt:update(dt)
 			self.curframe = 1
 		end
 	end
-	if love.keyboard.isDown("right") then
-		self.x = self.x + self.speed * dt
-	end		
 end
 
 function player_mt:draw()
@@ -165,7 +150,7 @@ end
 
 function player_mt:looseLife(lesslife)
 	self.life = self.life - lesslife
-	print(self.life)
+	--print(self.life)
 end
 
 function player_mt:isInGoodDirection(x)
