@@ -1,8 +1,17 @@
 local state = gstate.new()
-local quad = nil
+local backgroundImageRatioX = 1
+local imageRatio = 1
+local imageScale = 1
+local backgroundImages = {}
 
 function state:init()
-	quad = love.graphics.newQuad(0, 0, 600, 300, 512, 256)
+	
+	backgroundImages[1] = love.graphics.newImage("resources/textures/club/scene.png")
+
+	backgroundImageRatioX = love.graphics.getWidth() / backgroundImages[1]:getWidth()
+	imageRatio = backgroundImages[1]:getWidth() / backgroundImages[1]:getHeight()
+	
+	
 end
 
 
@@ -57,7 +66,7 @@ end
 
 function state:draw()
 	-- background
-	love.graphics.drawq(love.graphics.newImage("resources/textures/scene.png"), quad, 0, 0)
+	love.graphics.draw(backgroundImages[1], love.graphics.getWidth() / 2, love.graphics.getHeight() / 2, 0, backgroundImageRatioX, backgroundImageRatioX, backgroundImages[1]:getWidth() / 2, backgroundImages[1]:getHeight() / 2)
 	
 	-- game	
 	player.draw()
