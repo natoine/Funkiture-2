@@ -43,6 +43,7 @@ function player.update(dt)
 		local v = player.all[i]
 		if v.purge then
 			table.remove(player.all , i)
+			table.remove(persos, i)
 		else 
 			v:update(dt)
 			i = i + 1
@@ -150,7 +151,9 @@ end
 
 function player_mt:looseLife(lesslife)
 	self.life = self.life - lesslife
-	--print(self.life)
+	if self.life < 0 then
+		self.purge = true
+	end
 end
 
 function player_mt:isInGoodDirection(x)
