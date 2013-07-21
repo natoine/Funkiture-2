@@ -148,6 +148,7 @@ function enemy_mt:update(dt)
 		if self.x >= love.graphics.getWidth() then
 			self.left = true
 		elseif self.x <= 0 then
+			print("sortie de l'écran")
 			self.left = false
 		end
 		if nearestPlayerInfo[2] > distanceBtwEnemies then
@@ -181,7 +182,7 @@ end
 function enemy_mt:seekNearestPlayer()
 	local nearestDistance = love.graphics.getWidth()
 	local direction = 1
-	if self.left then direction = -1 end
+	if not self.left then direction = -1 end
 	for i , v in ipairs(player.all) do
 		local distance = math.abs(self.x - v.x)
 		if distance < nearestDistance then
