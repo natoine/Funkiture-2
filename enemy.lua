@@ -59,23 +59,23 @@ function enemy.update(dt)
 	-- gestion de la generation d'ennemis	
 	if #enemy.all < 1 then
 		local newnbenemies = math.floor(math.random(2))
-		print("nb enemies : "..#enemy.all.." new nbenemies : "..newnbenemies)
+		--print("nb enemies : "..#enemy.all.." new nbenemies : "..newnbenemies)
 		for i = 1, newnbenemies do
 			nbEnemyGenerated = nbEnemyGenerated + 1
 			local newenemytype = math.ceil(math.random(1 , #enemyTypes))		
 			local newenemy = enemy.new(nbEnemyGenerated , enemyTypes[newenemytype])
 			--right or left of the screen
 			local testLR = math.random(1)
-			print("testLR : "..testLR)
+		--	print("testLR : "..testLR)
 			if testLR > 0.5 then
 				-- tout à gauche 0
 				newenemy.x = 0 - distanceBtwEnemies * i
-				print("démarrage à gauche")
+				--print("démarrage à gauche")
 			else
 			-- tout à droite love.graphics.getWidth() et du coup left = true
 				newenemy.x = love.graphics.getWidth() + distanceBtwEnemies * i
 				newenemy.left  = true
-				print("démarrage à droite")
+				--print("démarrage à droite")
 			end
 		end
 	end
@@ -91,11 +91,11 @@ function enemy.update(dt)
 			i = i + 1
 		end
 	end
-
+	--purge hud
 	i = 1
 	while i <= #hudenemies do
 		local u = hudenemies[i]
-		if u.purge then
+		if u.enemy.purge then
 			table.remove(hudenemies , i)
 		else 
 			i = i + 1
@@ -127,11 +127,11 @@ function enemy_mt:update(dt)
 	local nearestPlayerInfo = self:seekNearestPlayer()
 	--tapera ou tapera pas
 	if self.currentcycle == enemy.cycles.walk or self.currentcycle == enemy.cycles.idle then
-		print("distance :"..nearestPlayerInfo[2])
+		--print("distance :"..nearestPlayerInfo[2])
 		if nearestPlayerInfo[2] <= distanceBtwEnemies then
-			print("distance hit")
+		--	print("distance hit")
 			if ( nearestPlayerInfo[1] == 1 and self.left) or (nearestPlayerInfo[1] == -1 and not self.left) then
-				print("direction hit")
+		--		print("direction hit")
 				local testKick = math.random()
 				if testKick > 0.5 then 
 					self.currentcycle = enemy.cycles.kick
@@ -173,7 +173,7 @@ function enemy_mt:update(dt)
 		if self.x >= love.graphics.getWidth() then
 			self.left = true
 		elseif self.x <= 0 then
-			print("sortie de l'écran")
+		--	print("sortie de l'écran")
 			self.left = false
 		end
 		if nearestPlayerInfo[2] > distanceBtwEnemies then
@@ -219,10 +219,10 @@ function enemy_mt:seekNearestPlayer()
 	end
 	if direction == 1 then 
 		self.left = true		
-		print("joueur à gauche")
+		--print("joueur à gauche")
 	else 
 		self.left = false
-		print("joueur à droite")
+		--print("joueur à droite")
 	end
 	return {direction , nearestDistance}
 end
@@ -243,7 +243,7 @@ end
 
 function enemy_mt:looseLife(lesslife, player)
 	self.life = self.life - lesslife
-	print(self.number.."remaining life"..self.life)
+	--print(self.number.."remaining life"..self.life)
 	if self.life <= 0 then
 		self.purge = true
 		player.score = player.score + 10
