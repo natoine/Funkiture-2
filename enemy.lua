@@ -52,13 +52,16 @@ function enemy.update(dt)
 			local newenemy = enemy.new(nbEnemyGenerated , enemyTypes[newenemytype])
 			--right or left of the screen
 			local testLR = math.random(1)
+			print("testLR : "..testLR)
 			if testLR > 0.5 then
 				-- tout à gauche 0
 				newenemy.x = 0 - distanceBtwEnemies * i
+				print("démarrage à gauche")
 			else
 			-- tout à droite love.graphics.getWidth() et du coup left = true
 				newenemy.x = love.graphics.getWidth() + distanceBtwEnemies * i
 				newenemy.left  = true
+				print("démarrage à droite")
 			end
 		end
 	end
@@ -99,12 +102,12 @@ function enemy_mt:update(dt)
 	local nearestPlayerInfo = self:seekNearestPlayer()
 	--tapera ou tapera pas
 	if self.currentcycle == enemy.cycles.walk or self.currentcycle == enemy.cycles.idle then
-		--print("distance :"..nearestPlayerInfo[2])
+		print("distance :"..nearestPlayerInfo[2])
 		if nearestPlayerInfo[2] <= distanceBtwEnemies then
-			--print("distance hit")
-			if ( nearestPlayerInfo[1] == -1 and self.left) or (nearestPlayerInfo[1] == 1 and not self.left) then
-				--print("direction hit")
-				local testKick = math.random(1)
+			print("distance hit")
+			if ( nearestPlayerInfo[1] == 1 and self.left) or (nearestPlayerInfo[1] == -1 and not self.left) then
+				print("direction hit")
+				local testKick = math.random()
 				if testKick > 0.5 then 
 					self.currentcycle = enemy.cycles.kick
 					self.curframe = 1
@@ -149,12 +152,9 @@ function enemy_mt:update(dt)
 		end
 		if nearestPlayerInfo[2] > distanceBtwEnemies then
 			local intensity = self:getDirection()
-			local xintensity = intensity[1]	
-			self.x = self.x + self.speed * xintensity * dt
-			if xintensity < 0 then
-				self.left = true
-			else 
-				self.left = false
+			if self.left == true then	
+				self.x = self.x - self.speed * dt
+			else self.x = self.x + self.speed * dt
 			end
 		end
 		--print(lastX - self.x)
@@ -177,7 +177,7 @@ function enemy_mt:getDirection()
 	return {abscisses , ordonnees}
 end
 
---Retourne la direction [1] si 1 vers la gauche, -1 vers la droite et la distance[2] a l'ennemi le plus proche
+--Retourne la direction [1] si 1 joueur vers la gauche, -1 vers la droite et la distance[2] a l'ennemi le plus proche
 function enemy_mt:seekNearestPlayer()
 	local nearestDistance = love.graphics.getWidth()
 	local direction = 1
@@ -186,10 +186,17 @@ function enemy_mt:seekNearestPlayer()
 		local distance = math.abs(self.x - v.x)
 		if distance < nearestDistance then
 			nearestDistance = distance
-			if self.x - v.x > 0 then direction = -1
+			if self.x < v.x then direction = -1
 			else direction = 1
 			end
 		end
+	end
+	if direction == 1 then 
+		self.left = true		
+		print("joueur à gauche")
+	else 
+		self.left = false
+		print("joueur à droite")
 	end
 	return {direction , nearestDistance}
 end
