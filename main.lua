@@ -36,6 +36,13 @@ function love.load()
 	musics[3] = love.audio.newSource("resources/Sounds/music3.mp3", "stream")
 	musics[4] = love.audio.newSource("resources/Sounds/music4.mp3", "stream")
 	musics[5] = love.audio.newSource("resources/Sounds/music5.mp3", "stream")
+	
+	musics[1]:setVolume(0.5)
+	musics[2]:setVolume(0.5)
+	musics[3]:setVolume(0.5)
+	musics[4]:setVolume(0.5)
+	musics[5]:setVolume(0.5)
+	
 	currentMusicIndex = math.round(math.random(1, #musics))
 	
 	love.audio.play(musics[currentMusicIndex])
