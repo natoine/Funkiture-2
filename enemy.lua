@@ -24,6 +24,9 @@ kickDamage = 2
 
 nbEnemyGenerated = 0
 
+--pour gerer la distance au spawn et la distance au player
+distanceBtwEnemies = 50
+
 function enemy.new(number, enemytype)
 	local self = setmetatable({},{__index = enemy_mt})
 	self.number = number
@@ -40,8 +43,9 @@ end
 
 function enemy.update(dt)	
 	-- gestion de la generation d'ennemis	
-	if #enemy.all < 3 then
-		local newnbenemies = math.floor(math.random(10))
+	if #enemy.all < 1 then
+		local newnbenemies = math.floor(math.random(2))
+		print("nb enemies : "..#enemy.all.." new nbenemies : "..newnbenemies)
 		for i = 1, newnbenemies do
 			nbEnemyGenerated = nbEnemyGenerated + 1
 			local newenemytype = math.ceil(math.random(1 , #enemyTypes))		
@@ -50,10 +54,10 @@ function enemy.update(dt)
 			local testLR = math.random(1)
 			if testLR > 0.5 then
 				-- tout à gauche 0
-				newenemy.x = 0 
+				newenemy.x = 0 - distanceBtwEnemies * i
 			else
 			-- tout à droite love.graphics.getWidth() et du coup left = true
-				newenemy.x = love.graphics.getWidth()
+				newenemy.x = love.graphics.getWidth() + distanceBtwEnemies * i
 				newenemy.left  = true
 			end
 		end
@@ -78,7 +82,22 @@ function enemy.draw()
 	end
 end
 
-function enemy_mt:update(dt)	
+function enemy_mt:update(dt)
+	
+	--tapera ou tapera pas
+	local nearestPlayerInfo = self:seekNearestPlayer()
+	if nearestPlayerInfo[2] < distanceBtwEnemies and not (self.currentcycle == enemy.cycles.punch or self.currentcycle == enemy.cycles.kick) then
+		if ( nearestPlayerInfo[1] == 1 and self.left) or (nearestPlayerInfo[1] == -1 and not self.left) then
+			local testKick = math.random(1)
+			if testKick > 0.5 then 
+				self.currentcycle = enemy.cycles.kick
+				self.curframe = 1
+			else 
+				self.currentcycle = enemy.cycles.punch
+				self.curframe = 1
+			end
+		end
+	end
 	-- anim
 	self.dtime = self.dtime + dt
 	self.timer = self.timer+dt
@@ -129,14 +148,15 @@ end
 
 -- Retourne un tableau : en première case (x) et en deuxième case (y)
 function enemy_mt:getDirection()
-	local abscisses = self:seekNearestPlayer()
+	local abscisses = self:seekNearestPlayer()[1]
 	local ordonnees = love.joystick.getAxis(self.number, 2)	
 	return {abscisses , ordonnees}
 end
 
+--Retourne la direction [1] si 1 vers la gauche, -1 vers la droite et la distance[2] a l'ennemi le plus proche
 function enemy_mt:seekNearestPlayer()
 	local nearestDistance = love.graphics.getWidth()
-	local direction = 1	
+	local direction = 1
 	if self.left then direction = -1 end
 	for i , v in ipairs(player.all) do
 		local distance = math.abs(self.x - v.x)
@@ -147,13 +167,15 @@ function enemy_mt:seekNearestPlayer()
 			end
 		end
 	end
-	return direction
+	return {direction , nearestDistance}
 end
 
 function enemy_mt:draw()
 	love.graphics.setColor(255,255,255)
 	
 	if self.left then
+		print("x : "..self.x)
+		print("curframe : "..self.curframe)
 		love.graphics.drawq(self.image, enemy.quad[self.currentcycle[self.curframe]], self.x - 64, 400, 0, -1, 1, 64 , 64 )	
 	else
 		love.graphics.drawq(self.image, enemy.quad[self.currentcycle[self.curframe]], self.x, 400, 0, 1, 1, 64 , 64 )
@@ -166,7 +188,9 @@ end
 
 function enemy_mt:looseLife(lesslife)
 	self.life = self.life - lesslife
-	--print(self.life)
+	if self.life < 0 then
+		self.purge = true
+	end
 end
 
 function enemy_mt:isInGoodDirection(x)
