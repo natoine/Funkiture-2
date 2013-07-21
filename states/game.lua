@@ -6,7 +6,7 @@ local backgroundImages = {}
 
 function state:init()
 	
-	backgroundImages[1] = love.graphics.newImage("resources/textures/club/scene.png")
+	backgroundImages[1] = love.graphics.newImage("resources/textures/club/scene1.png")
 
 	backgroundImageRatioX = love.graphics.getWidth() / backgroundImages[1]:getWidth()
 	imageRatio = backgroundImages[1]:getWidth() / backgroundImages[1]:getHeight()
