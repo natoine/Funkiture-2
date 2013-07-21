@@ -38,6 +38,7 @@ function enemy.new(number, enemytype)
 	self.timer = 0
 	table.insert(enemy.all , self)
 	table.insert(persos, self)
+	table.insert(hudenemies, hud.newenemy(self))
 	return self
 end
 
@@ -68,9 +69,17 @@ function enemy.update(dt)
 		local v = enemy.all[i]
 		if v.purge then
 			table.remove(enemy.all , i)
-			table.remove(persos , i)
 		else 
 			v:update(dt)
+			i = i + 1
+		end
+	end
+	i = 1
+	while i <= #hudenemies do
+		local u = hudenemies[i]
+		if u.purge then
+			table.remove(hudenemies , i)
+		else 
 			i = i + 1
 		end
 	end

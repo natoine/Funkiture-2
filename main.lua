@@ -25,6 +25,7 @@ function love.load()
 	players = {}
 	--tableau des huds
 	huds = {}
+	hudenemies = {}
 	--tableau des persos y compris les joueurs
 	persos = {}	
 
