@@ -108,6 +108,8 @@ end
 
 
 function state:draw()
+	love.graphics.setColor(0, 0, 0)
+
 	if player1 then
 		if j1Ready then
 			--sentences are set to an abscisse in accordance with the screen's length--
