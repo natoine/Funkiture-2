@@ -66,7 +66,7 @@ function player.update(dt)
 		if w.purge then
 			table.remove(persos, i)
 		else 
-			w:update(dt)
+			--w:update(dt)
 			i = i + 1
 		end
 	end
