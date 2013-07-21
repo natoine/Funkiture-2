@@ -3,10 +3,17 @@ local backgroundImageRatioX = 1
 local imageRatio = 1
 local imageScale = 1
 local backgroundImages = {}
+local deltaTimeChangeBackground = 0
+local currentIndexBackground = 0
 
 function state:init()
 	
-	backgroundImages[1] = love.graphics.newImage("resources/textures/club/scene.png")
+	backgroundImages[1] = love.graphics.newImage("resources/textures/club/scene1.png")
+	backgroundImages[2] = love.graphics.newImage("resources/textures/club/scene3.png")
+	backgroundImages[3] = love.graphics.newImage("resources/textures/club/scene4.png")
+	backgroundImages[4] = love.graphics.newImage("resources/textures/club/scene2.png")
+	
+	deltaTimeChangeBackground = love.timer.getDelta()
 
 	backgroundImageRatioX = love.graphics.getWidth() / backgroundImages[1]:getWidth()
 	imageRatio = backgroundImages[1]:getWidth() / backgroundImages[1]:getHeight()
@@ -66,7 +73,12 @@ end
 
 function state:draw()
 	-- background
-	love.graphics.draw(backgroundImages[1], love.graphics.getWidth() / 2, love.graphics.getHeight() / 2, 0, backgroundImageRatioX, backgroundImageRatioX, backgroundImages[1]:getWidth() / 2, backgroundImages[1]:getHeight() / 2)
+	if deltaTimeChangeBackground >= 0.250 then
+		deltaTimeChangeBackground = 0
+		currentIndexBackground = (currentIndexBackground + 1) % #backgroundImages
+	end
+	
+	love.graphics.draw(backgroundImages[currentIndexBackground + 1], love.graphics.getWidth() / 2, love.graphics.getHeight() / 2, 0, backgroundImageRatioX, backgroundImageRatioX, backgroundImages[1]:getWidth() / 2, backgroundImages[1]:getHeight() / 2)
 	
 	-- game	
 	player.draw()
@@ -83,6 +95,8 @@ function state:draw()
 	if players[4] then 
 		huds[4]:draw((((love.graphics.getWidth()/4)-150)*7/2)+3*150,70)
 	end
+	
+	deltaTimeChangeBackground = deltaTimeChangeBackground + love.timer.getDelta()
 end
 
 return state
