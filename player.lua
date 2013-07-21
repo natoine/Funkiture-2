@@ -76,6 +76,7 @@ end
 function player_mt:getDirection()
 	local abscisses = love.joystick.getAxis(self.number, 1)
 	local ordonnees = love.joystick.getAxis(self.number, 2)	
+	
 	return {abscisses , ordonnees}
 end
 
@@ -137,19 +138,33 @@ function player_mt:update(dt)
 	local intensity = self:getDirection()
 	local xintensity = intensity[1]
 	local lastX = self.x	
-	self.x = self.x + self.speed * xintensity * dt
+	
 	if xintensity < 0 then
 		self.left = true
 	else 
 		self.left = false
 	end 
+	
+	if not(xintensity <= 0.2 and xintensity >= -0.2) then
+	
+		-- on regarde si on peut aller a gauche
+		if self.left and (self.x - 64) > 0 then
+			self.x = self.x + self.speed * xintensity * dt
+		end
+	
+		-- on regarde si on peut aller à droite
+		if not (self.left) and (self.x + 64) < love.graphics.getWidth() then
+			self.x = self.x + self.speed * xintensity * dt
+		end
+	end
+		
 	--print(lastX - self.x)
-	--0.03 seuil empririque TODO passer en variable 
-	if self.currentcycle == player.cycles.idle and ( lastX - self.x > 0.03 or lastX - self.x < -0.03) then
+	--0.1seuil empririque TODO passer en variable 
+	if self.currentcycle == player.cycles.idle and ( lastX - self.x > 0.1 or lastX - self.x < -0.1) then
 		self.currentcycle = player.cycles.walk
 		self.curframe = 1
  	elseif self.currentcycle == player.cycles.walk then
-		if lastX - self.x < 0.03 and lastX - self.x > -0.03 then
+		if lastX - self.x < 0.1 and lastX - self.x > -0.1 then
 			self.currentcycle = player.cycles.idle
 			self.curframe = 1
 		end
