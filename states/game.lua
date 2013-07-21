@@ -2,7 +2,7 @@ local state = gstate.new()
 local quad = nil
 
 function state:init()
-	quad = love.graphics.newQuad(0, 0, 600, 300, 512, 256)
+	quad = love.graphics.newQuad(0, 0, 1024, 600, 512, 256)
 end
 
 

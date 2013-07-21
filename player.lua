@@ -133,7 +133,8 @@ function player_mt:update(dt)
 end
 
 function player_mt:draw()
-
+	love.graphics.setColor(255,255,255)
+	
 	if self.left then
 		love.graphics.drawq(self.image, player.quad[self.currentcycle[self.curframe]], self.x - 64, 400, 0, -1, 1, 64 , 64 )	
 	else
