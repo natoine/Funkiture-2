@@ -1,5 +1,7 @@
-local enemy_mt = {x = 100, speed = 50, life = 100, score = 0, combo = 0, left = false}
+local enemy_mt = {x = 100, speed = 50, life = 10, score = 0, combo = 0, left = false}
 local enemy = {}
+local kickSounds = {}
+local kickUntouchedSounds = {}
 --local kickdamage = 10--
 --local punchdamage = 10--
 
@@ -25,7 +27,7 @@ kickDamage = 2
 nbEnemyGenerated = 0
 
 --pour gerer la distance au spawn et la distance au player
-distanceBtwEnemies = 50
+distanceBtwEnemies = 60
 
 function enemy.new(number, enemytype)
 	local self = setmetatable({},{__index = enemy_mt})
@@ -39,6 +41,17 @@ function enemy.new(number, enemytype)
 	table.insert(enemy.all , self)
 	table.insert(persos, self)
 	table.insert(hudenemies, hud.newenemy(self))
+	
+	kickSounds[1] = love.audio.newSource("resources/Sounds/kick1.ogg", "static")
+	kickSounds[2] = love.audio.newSource("resources/Sounds/kick2.ogg", "static")
+	kickSounds[3] = love.audio.newSource("resources/Sounds/punch1.ogg", "static")
+	kickSounds[4] = love.audio.newSource("resources/Sounds/punch2.ogg", "static")
+	kickSounds[5] = love.audio.newSource("resources/Sounds/punch3.ogg", "static")
+	
+	kickUntouchedSounds[1] = love.audio.newSource("resources/Sounds/kickuntouched1.ogg", "static")
+	kickUntouchedSounds[2] = love.audio.newSource("resources/Sounds/kickuntouched2.ogg", "static")
+	kickUntouchedSounds[3] = love.audio.newSource("resources/Sounds/kickuntouched3.ogg", "static")
+	
 	return self
 end
 
@@ -53,33 +66,51 @@ function enemy.update(dt)
 			local newenemy = enemy.new(nbEnemyGenerated , enemyTypes[newenemytype])
 			--right or left of the screen
 			local testLR = math.random(1)
+			print("testLR : "..testLR)
 			if testLR > 0.5 then
 				-- tout à gauche 0
 				newenemy.x = 0 - distanceBtwEnemies * i
+				print("démarrage à gauche")
 			else
 			-- tout à droite love.graphics.getWidth() et du coup left = true
 				newenemy.x = love.graphics.getWidth() + distanceBtwEnemies * i
 				newenemy.left  = true
+				print("démarrage à droite")
 			end
 		end
 	end
-	--kevin purge
+	--purge enemies
 	local i = 1
 	while i <= #enemy.all do
 		local v = enemy.all[i]
 		if v.purge then
+			--print("purge "..v.number)
 			table.remove(enemy.all , i)
 		else 
 			v:update(dt)
 			i = i + 1
 		end
 	end
+
 	i = 1
 	while i <= #hudenemies do
 		local u = hudenemies[i]
 		if u.purge then
 			table.remove(hudenemies , i)
 		else 
+			i = i + 1
+		end
+	end
+	
+	--purge persos
+	i = 1
+	while i <= #persos do
+		local w = persos[i]
+		if w.purge then
+			--print("purge "..w.number)
+			table.remove(persos , i)
+		else 
+			--w:update(dt)
 			i = i + 1
 		end
 	end
@@ -93,18 +124,24 @@ end
 
 function enemy_mt:update(dt)
 	
-	--tapera ou tapera pas
 	local nearestPlayerInfo = self:seekNearestPlayer()
-	if nearestPlayerInfo[2] < distanceBtwEnemies and not (self.currentcycle == enemy.cycles.punch or self.currentcycle == enemy.cycles.kick) then
-		if ( nearestPlayerInfo[1] == 1 and self.left) or (nearestPlayerInfo[1] == -1 and not self.left) then
-			local testKick = math.random(1)
-			if testKick > 0.5 then 
-				self.currentcycle = enemy.cycles.kick
-				self.curframe = 1
-			else 
-				self.currentcycle = enemy.cycles.punch
-				self.curframe = 1
+	--tapera ou tapera pas
+	if self.currentcycle == enemy.cycles.walk or self.currentcycle == enemy.cycles.idle then
+		print("distance :"..nearestPlayerInfo[2])
+		if nearestPlayerInfo[2] <= distanceBtwEnemies then
+			print("distance hit")
+			if ( nearestPlayerInfo[1] == 1 and self.left) or (nearestPlayerInfo[1] == -1 and not self.left) then
+				print("direction hit")
+				local testKick = math.random()
+				if testKick > 0.5 then 
+					self.currentcycle = enemy.cycles.kick
+					self.curframe = 1
+				else 
+					self.currentcycle = enemy.cycles.punch
+					self.curframe = 1
+				end
 			end
+		else self.currentcycle = enemy.cycles.walk
 		end
 	end
 	-- anim
@@ -124,35 +161,39 @@ function enemy_mt:update(dt)
 			end
 		end
 			if self.curframe > #self.currentcycle then
+				if not(self.currentcycle == enemy.cycles.walk) then
+					self.currentcycle = enemy.cycles.walk	
+				end			
 				self.curframe = 1
 			end
 		end
 		
 	--deplacement
-	local lastX = self.x
-	if self.x >= love.graphics.getWidth() then
-		self.left = true
-	else	
-		local intensity = self:getDirection()
-		local xintensity = intensity[1]	
-		self.x = self.x + self.speed * xintensity * dt
-		if xintensity < 0 then
+		local lastX = self.x
+		if self.x >= love.graphics.getWidth() then
 			self.left = true
-		else 
+		elseif self.x <= 0 then
+			print("sortie de l'écran")
 			self.left = false
 		end
-	end
-	--print(lastX - self.x)
-	--0.03 seuil empririque TODO passer en variable 
-	if self.currentcycle == enemy.cycles.idle and ( lastX - self.x > 0.03 or lastX - self.x < -0.03) then
-		self.currentcycle = enemy.cycles.walk
-		self.curframe = 1
- 	elseif self.currentcycle == enemy.cycles.walk then
-		if lastX - self.x < 0.03 and lastX - self.x > -0.03 then
-			self.currentcycle = enemy.cycles.idle
-			self.curframe = 1
+		if nearestPlayerInfo[2] > distanceBtwEnemies then
+			local intensity = self:getDirection()
+			if self.left == true then	
+				self.x = self.x - self.speed * dt
+			else self.x = self.x + self.speed * dt
+			end
 		end
-	end
+		--print(lastX - self.x)
+		--0.03 seuil empririque TODO passer en variable 
+		if self.currentcycle == enemy.cycles.idle and ( lastX - self.x > 0.03 or lastX - self.x < -0.03) then
+			self.currentcycle = enemy.cycles.walk
+			self.curframe = 1
+	 	elseif self.currentcycle == enemy.cycles.walk then
+			if lastX - self.x < 0.03 and lastX - self.x > -0.03 then
+				self.currentcycle = enemy.cycles.idle
+				self.curframe = 1
+			end
+		end
 end
 
 -- Retourne un tableau : en première case (x) et en deuxième case (y)
@@ -162,19 +203,26 @@ function enemy_mt:getDirection()
 	return {abscisses , ordonnees}
 end
 
---Retourne la direction [1] si 1 vers la gauche, -1 vers la droite et la distance[2] a l'ennemi le plus proche
+--Retourne la direction [1] si 1 joueur vers la gauche, -1 vers la droite et la distance[2] a l'ennemi le plus proche
 function enemy_mt:seekNearestPlayer()
 	local nearestDistance = love.graphics.getWidth()
 	local direction = 1
-	if self.left then direction = -1 end
+	if not self.left then direction = -1 end
 	for i , v in ipairs(player.all) do
 		local distance = math.abs(self.x - v.x)
 		if distance < nearestDistance then
 			nearestDistance = distance
-			if self.x - v.x > 0 then direction = -1
+			if self.x < v.x then direction = -1
 			else direction = 1
 			end
 		end
+	end
+	if direction == 1 then 
+		self.left = true		
+		print("joueur à gauche")
+	else 
+		self.left = false
+		print("joueur à droite")
 	end
 	return {direction , nearestDistance}
 end
@@ -183,8 +231,6 @@ function enemy_mt:draw()
 	love.graphics.setColor(255,255,255)
 	
 	if self.left then
-		print("x : "..self.x)
-		print("curframe : "..self.curframe)
 		love.graphics.drawq(self.image, enemy.quad[self.currentcycle[self.curframe]], self.x - 64, 400, 0, -1, 1, 64 , 64 )	
 	else
 		love.graphics.drawq(self.image, enemy.quad[self.currentcycle[self.curframe]], self.x, 400, 0, 1, 1, 64 , 64 )
@@ -195,10 +241,12 @@ function enemy_mt:draw()
 	end
 end
 
-function enemy_mt:looseLife(lesslife)
+function enemy_mt:looseLife(lesslife, player)
 	self.life = self.life - lesslife
-	if self.life < 0 then
+	print(self.number.."remaining life"..self.life)
+	if self.life <= 0 then
 		self.purge = true
+		player.score = player.score + 10
 	end
 end
 
@@ -222,8 +270,13 @@ function enemy_mt:punch()
 			local distance = math.abs(self.x - v.x)
 	--		print(distance)
 			if distance < punchDistance and self:isInGoodDirection(v.x) then
-				v:looseLife(punchDamage)
+				v:looseLife(punchDamage, self)
+				love.audio.play(kickSounds[math.round(math.random(1, #kickSounds))])
+			else
+				love.audio.play(kickUntouchedSounds[math.round(math.random(1, #kickUntouchedSounds))])
 			end
+		else
+			love.audio.play(kickUntouchedSounds[math.round(math.random(1, #kickUntouchedSounds))])
 		end
 	end
 end
@@ -236,8 +289,13 @@ function enemy_mt:kick()
 			local distance = math.abs(self.x - v.x)
 	--		print(distance)
 			if distance < kickDistance and self:isInGoodDirection(v.x) then
-				v:looseLife(kickDamage)
+				v:looseLife(kickDamage, self)
+				love.audio.play(kickSounds[math.round(math.random(1, #kickSounds))])
+			else
+				love.audio.play(kickUntouchedSounds[math.round(math.random(1, #kickUntouchedSounds))])
 			end
+		else
+			love.audio.play(kickUntouchedSounds[math.round(math.random(1, #kickUntouchedSounds))])
 		end
 	end
 end
