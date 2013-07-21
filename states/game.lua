@@ -1,13 +1,12 @@
 local state = gstate.new()
+local quad = nil
 
 function state:init()
-	
-
+	quad = love.graphics.newQuad(0, 0, 600, 300, 512, 256)
 end
 
 
 function state:enter()
-
 end
 
 
@@ -57,6 +56,9 @@ end
 
 
 function state:draw()
+	-- background
+	love.graphics.drawq(love.graphics.newImage("resources/textures/scene.png"), quad, 0, 0)
+	
 	-- game	
 	player.draw()
 	-- hud

@@ -115,7 +115,7 @@ end
 
 function player_mt:draw()
 	love.graphics.drawq(self.image,player.quad[self.currentcycle[self.curframe]],self.x,100)
-	if self.dtime>100 then 
+	if self.dtime > 100 then 
 		self.frame = self.frame + 1
 		self.dtime = 0
 	end
