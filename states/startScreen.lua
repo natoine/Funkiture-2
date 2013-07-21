@@ -1,6 +1,7 @@
 local state = gstate.new()
 
 image = love.graphics.newImage("resources/textures/menu.png")
+imagebutton = love.graphics.newImage("resources/textures/press_start.png")
 timer = 0
 frametime = 1/10
 angle = 0
@@ -81,8 +82,8 @@ end
 function state:draw()
 	love.graphics.setBackgroundColor(255,255,255)
 	love.graphics.setColor(0,0,0)
-	love.graphics.print("Press Start Button", 400, 300)
-	love.graphics.draw(image,love.graphics.getWidth()/2,love.graphics.getHeight()/2,angle*math.pi*1/24,1.5,1.5,250,174)
+	love.graphics.draw(image,love.graphics.getWidth()/2,love.graphics.getHeight()/2,-angle*math.pi*1/24,1.5,1.5,250,174)
+	love.graphics.draw(imagebutton,(love.graphics.getWidth()+10)/2,(love.graphics.getHeight()+30)/2,0,1,1,50,50)
 end
 
 return state

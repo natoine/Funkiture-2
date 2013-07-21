@@ -15,8 +15,9 @@ function hud_mt:draw(x,y)
 	love.graphics.rectangle("fill",x+5,y+5,140,10)
 	love.graphics.setColor(51,255,51,200)
 	love.graphics.rectangle("fill",x+5,y+5,140*self.player.life*0.01,10)
-	love.graphics.setColor(255,255,255,255)
+	love.graphics.setColor(0,0,0,200)
 	love.graphics.print("player "..self.player.number,x+50,y-40)
+	love.graphics.print("score : "..self.player.score,x+50,y+40)
 end
 
 return hud

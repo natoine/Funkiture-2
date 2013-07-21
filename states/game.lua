@@ -61,16 +61,16 @@ function state:draw()
 	player.draw()
 	-- hud
 	if players[1] then 
-		huds[1]:draw(20,70)
+		huds[1]:draw(((love.graphics.getWidth()/4)-150)/2,70)
 	end
 	if players[2] then
-		huds[2]:draw(210,70)
+		huds[2]:draw((((love.graphics.getWidth()/4)-150)*3/2)+150,70)
 	end
 	if players[3] then 
-		huds[3]:draw(400,70)
+		huds[3]:draw((((love.graphics.getWidth()/4)-150)*5/2)+2*150,70)
 	end
 	if players[4] then 
-		huds[4]:draw(590,70)
+		huds[4]:draw((((love.graphics.getWidth()/4)-150)*7/2)+3*150,70)
 	end
 end
 
