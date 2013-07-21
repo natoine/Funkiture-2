@@ -7,8 +7,8 @@ local kickUntouchedSounds = {}
 
 player.all = {}
 player.quad = {}
-for i=1, 8 do
-	table.insert (player.quad, love.graphics.newQuad(128*(i-1),0,128,128,1024,128))
+for i=1, 9 do
+	table.insert (player.quad, love.graphics.newQuad(128*(i-1),0,128,128,1152,128))
 end
 
 player.cycles = {}
