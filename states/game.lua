@@ -138,7 +138,7 @@ function state:draw()
 	
 	-- hudenemies--
 	
-	for i, v in ipairs(enemy.all) do
+	for i, v in ipairs(hudenemies) do
 		hudenemies[i] : drawenemy(i*50)
 	end
 end
