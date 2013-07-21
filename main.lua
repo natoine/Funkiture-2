@@ -22,6 +22,17 @@ function love.load()
 	players = {}
 	--tableau des huds--
 	huds = {}
+	
+	-- musiques
+	musics = {}
+	currentMusicIndex = 1
+	musics[1] = love.audio.newSource("Sounds/music1.mp3", "stream")
+	musics[2] = love.audio.newSource("Sounds/music2.mp3", "stream")
+	musics[3] = love.audio.newSource("Sounds/music3.mp3", "stream")
+	musics[4] = love.audio.newSource("Sounds/music4.mp3", "stream")
+	currentMusicIndex = math.floor(math.random(1, 4))
+	
+	love.audio.play(musics[currentMusicIndex])
 end
 
 function love.joystickpressed(joystick, button)
@@ -34,6 +45,11 @@ end
 
 function love.update(dt)
 	gstate.update(dt)
+	if(musics[currentMusicIndex]:isStopped()) then
+		musics[currentMusicIndex]:rewind()
+		currentMusicIndex = math.floor(math.random(1, 5))
+		love.audio.play(musics[currentMusicIndex])
+	end
 end
 
 function love.draw()
