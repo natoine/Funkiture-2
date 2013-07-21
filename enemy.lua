@@ -57,8 +57,8 @@ end
 
 function enemy.update(dt)	
 	-- gestion de la generation d'ennemis	
-	if #enemy.all < 1 then
-		local newnbenemies = math.floor(math.random(2))
+	if #enemy.all < 4 then
+		local newnbenemies = math.floor(math.random(10))
 		--print("nb enemies : "..#enemy.all.." new nbenemies : "..newnbenemies)
 		for i = 1, newnbenemies do
 			nbEnemyGenerated = nbEnemyGenerated + 1
