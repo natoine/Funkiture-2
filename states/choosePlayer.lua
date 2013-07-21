@@ -3,9 +3,23 @@ local j1Ready = false
 local j2Ready = false
 local j3Ready = false
 local j4Ready = false
+local playerQuads = {}
+local j1Image = nil
+local j2Image = nil
+local j3Image = nil
+local j4Image = nil
+local deltaTimeChangeImagePlayer = 0
+local currentImageIndex = 0
 
 function state:init()
 
+	playerQuads[1] = love.graphics.newQuad(0, 0, 128, 128, 1152, 128)
+	playerQuads[2] = love.graphics.newQuad(128 * 8, 0, 128, 128, 1152, 128)
+	
+	j1Image =  love.graphics.newImage("resources/textures/jacksons/jackson1.png")
+	j2Image =  love.graphics.newImage("resources/textures/jacksons/jackson2.png")
+	j3Image =  love.graphics.newImage("resources/textures/jacksons/jackson3.png")
+	j4Image =  love.graphics.newImage("resources/textures/jacksons/jackson4.png")
 end
 
 
@@ -111,46 +125,87 @@ function state:draw()
 	love.graphics.setColor(0, 0, 0)
 
 	if player1 then
+	
 		if j1Ready then
 			--sentences are set to an abscisse in accordance with the screen's length--
 			love.graphics.print("Player 1 Ready !", ((love.graphics.getWidth()/4)-100)/2, 500)
+			
+			love.graphics.setColor(255, 255, 255)
+			love.graphics.drawq(j1Image, playerQuads[currentImageIndex + 1], 180, 200, 0, 1, 1, 64, 64)
+			love.graphics.setColor(0, 0, 0)
+			
 		else
-			love.graphics.print("Choose Your Character.", ((love.graphics.getWidth()/4)-100)/2, 300)
+			love.graphics.setColor(255, 255, 255)
+			love.graphics.drawq(j1Image, playerQuads[1], 180, 200, 0, 1, 1, 64, 64)
+			love.graphics.setColor(0, 0, 0)
+			--love.graphics.print("Choose Your Character.", ((love.graphics.getWidth()/4)-100)/2, 300)
 			love.graphics.print("When ready press A.", ((love.graphics.getWidth()/4)-100)/2, 350)
 		end
 	else
 		love.graphics.print("Press Start Button",((love.graphics.getWidth()/4)-100)/2, 300)
 	end
 	if player2 then
+		
 		if j2Ready then
+		
+			love.graphics.setColor(255, 255, 255)
+			love.graphics.drawq(j2Image, playerQuads[currentImageIndex + 1], 430, 200, 0, 1, 1, 64, 64)
+			love.graphics.setColor(0, 0, 0)
+		
 			love.graphics.print("Player 2 Ready !", (((love.graphics.getWidth()/4)-100)*3/2)+100, 500)
 		else
-			love.graphics.print("Choose Your Character.", (((love.graphics.getWidth()/4)-100)*3/2)+100, 300)
+			love.graphics.setColor(255, 255, 255)
+			love.graphics.drawq(j2Image, playerQuads[1], 430, 200, 0, 1, 1, 64, 64)
+			love.graphics.setColor(0, 0, 0)
+			--love.graphics.print("Choose Your Character.", (((love.graphics.getWidth()/4)-100)*3/2)+100, 300)
 			love.graphics.print("When ready press A.", (((love.graphics.getWidth()/4)-100)*3/2)+100, 350)
 		end
 	else
 		love.graphics.print("Press Start Button",(((love.graphics.getWidth()/4)-100)*3/2)+100, 300)
 	end
 	if player3 then
+		
 		if j3Ready then
+			love.graphics.setColor(255, 255, 255)
+			love.graphics.drawq(j3Image, playerQuads[currentImageIndex + 1], 680, 200, 0, 1, 1, 64, 64)
+			love.graphics.setColor(0, 0, 0)
+		
 			love.graphics.print("Player 3 Ready !", (((love.graphics.getWidth()/4)-100)*5/2)+2*100, 500)
 		else
-			love.graphics.print("Choose Your Character.", (((love.graphics.getWidth()/4)-100)*5/2)+2*100, 300)
+			love.graphics.setColor(255, 255, 255)
+			love.graphics.drawq(j3Image, playerQuads[1], 680, 200, 0, 1, 1, 64, 64)
+			love.graphics.setColor(0, 0, 0)
+			--love.graphics.print("Choose Your Character.", (((love.graphics.getWidth()/4)-100)*5/2)+2*100, 300)
 			love.graphics.print("When ready press A.", (((love.graphics.getWidth()/4)-100)*5/2)+2*100, 350)
 		end
 	else
 		love.graphics.print("Press Start Button",(((love.graphics.getWidth()/4)-100)*5/2)+2*100, 300)
 	end
 	if player4 then
+		
 		if j4Ready then
+			love.graphics.setColor(255, 255, 255)
+			love.graphics.drawq(j4Image, playerQuads[currentImageIndex + 1], 930, 200, 0, 1, 1, 64, 64)
+			love.graphics.setColor(0, 0, 0)
+			
 			love.graphics.print("Player 4 Ready !", (((love.graphics.getWidth()/4)-100)*7/2)+3*100, 500)
 		else
-			love.graphics.print("Choose Your Character.", (((love.graphics.getWidth()/4)-100)*7/2)+3*100, 300)
+			love.graphics.setColor(255, 255, 255)
+			love.graphics.drawq(j4Image, playerQuads[1], 930, 200, 0, 1, 1, 64, 64)
+			love.graphics.setColor(0, 0, 0)
+			--love.graphics.print("Choose Your Character.", (((love.graphics.getWidth()/4)-100)*7/2)+3*100, 300)
 			love.graphics.print("When ready press A.", (((love.graphics.getWidth()/4)-100)*7/2)+3*100, 350)
 		end
 	else
 		love.graphics.print("Press Start Button", (((love.graphics.getWidth()/4)-100)*7/2)+3*100, 300)
 	end
+	
+	if deltaTimeChangeImagePlayer > 0.2 then
+		deltaTimeChangeImagePlayer = 0
+		currentImageIndex = (currentImageIndex + 1) % 2
+	end
+	
+	deltaTimeChangeImagePlayer = deltaTimeChangeImagePlayer + love.timer.getDelta()
 end
 
 return state

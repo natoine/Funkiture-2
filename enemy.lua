@@ -57,16 +57,16 @@ end
 
 function enemy.update(dt)	
 	-- gestion de la generation d'ennemis	
-	if #enemy.all < 1 then
-		local newnbenemies = math.floor(math.random(2))
+	if #enemy.all < 4 then
+		local newnbenemies = math.floor(math.random(10))
 		--print("nb enemies : "..#enemy.all.." new nbenemies : "..newnbenemies)
 		for i = 1, newnbenemies do
 			nbEnemyGenerated = nbEnemyGenerated + 1
 			local newenemytype = math.ceil(math.random(1 , #enemyTypes))		
 			local newenemy = enemy.new(nbEnemyGenerated , enemyTypes[newenemytype])
 			--right or left of the screen
-			local testLR = math.random(1)
-		--	print("testLR : "..testLR)
+			local testLR = math.random()
+			print("testLR : "..testLR)
 			if testLR > 0.5 then
 				-- tout à gauche 0
 				newenemy.x = 0 - distanceBtwEnemies * i
