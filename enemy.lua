@@ -40,6 +40,7 @@ function enemy.new(number, enemytype)
 	self.timer = 0
 	table.insert(enemy.all , self)
 	table.insert(persos, self)
+	table.insert(hudenemies, hud.newenemy(self))
 	
 	kickSounds[1] = love.audio.newSource("resources/Sounds/kick1.ogg", "static")
 	kickSounds[2] = love.audio.newSource("resources/Sounds/kick2.ogg", "static")
@@ -90,6 +91,17 @@ function enemy.update(dt)
 			i = i + 1
 		end
 	end
+
+	i = 1
+	while i <= #hudenemies do
+		local u = hudenemies[i]
+		if u.purge then
+			table.remove(hudenemies , i)
+		else 
+			i = i + 1
+		end
+	end
+	
 	--purge persos
 	i = 1
 	while i <= #persos do
