@@ -10,6 +10,7 @@ local smallBafflesImages = {}
 local currentBafflesQuad = 0
 local deltaTimeChangeBaffle = 0
 local bigBafflesQuads = {}
+local imageGameOver = nil
 
 function state:init()
 	
@@ -21,6 +22,8 @@ function state:init()
 	bigBafflesImages[1] = love.graphics.newImage("resources/textures/club/bafflebig.png")
 
 	smallBafflesImages[1] = love.graphics.newImage("resources/textures/club/bafflesmall.png")
+	
+	imageGameOver = love.graphics.newImage("resources/textures/hud/gameover.png")
 	
 	deltaTimeChangeBackground = love.timer.getDelta()
 	deltaTimeChangeBaffles = love.timer.getDelta()
@@ -122,6 +125,12 @@ function state:draw()
 	end
 	if players[4] then 
 		huds[4]:draw((((love.graphics.getWidth()/4)-150)*7/2)+3*150,70)
+	end
+	
+	love.graphics.setColor(255, 0, 0)
+	
+	if #player.all == 0 then
+		love.graphics.draw(imageGameOver, (love.graphics.getWidth() / 2) - (512 / 2), (love.graphics.getHeight() / 2) - (256 / 2), 0, 1, 1, 0, 0)
 	end
 	
 	deltaTimeChangeBackground = deltaTimeChangeBackground + love.timer.getDelta()
