@@ -20,9 +20,11 @@ function love.load()
 	countPlayers = 0
 	--tableau des joueurs
 	players = {}
-	--tableau des huds--
+	--tableau des huds
 	huds = {}
-	
+	--tableau des persos y compris les joueurs
+	persos = {}	
+
 	-- musiques
 	musics = {}
 	currentMusicIndex = 1

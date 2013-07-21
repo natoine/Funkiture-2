@@ -17,6 +17,11 @@ player.cycles.kick = {7, 8}
 
 frametime = 1/10
 
+punchDistance = 70
+kickDistance = 90
+punchDamage = 4
+kickDamage = 2
+
 function player.new(number)
 	local self = setmetatable({},{__index = player_mt})
 	self.number = number
@@ -27,6 +32,7 @@ function player.new(number)
 	self.dtime = 0
 	self.timer = 0
 	table.insert(player.all , self)
+	table.insert(persos, self)
 	return self
 end
 
@@ -102,10 +108,21 @@ function player_mt:update(dt)
 	if self.timer>frametime then
 		self.timer = self.timer - frametime
 		self.curframe = self.curframe + 1
-		if self.curframe > #self.currentcycle then
-			self.curframe = 1
+		-- calcul des coups TODO state machines
+		if self.currentcycle == player.cycles.kick then
+			if self.curframe == 2 then
+				self:kick()
+			end
+		elseif self.currentcycle == player.cycles.punch then
+			if self.curframe == 2 then
+				self:punch()
+			end
 		end
-	end	
+			if self.curframe > #self.currentcycle then
+				self.curframe = 1
+			end
+		end
+		
 	--deplacement
 	local intensity = self:getDirection()
 	local xintensity = intensity[1]
@@ -142,6 +159,51 @@ function player_mt:draw()
 	if self.dtime>100 then 
 		self.frame = self.frame + 1
 		self.dtime = 0
+	end
+end
+
+function player_mt:looseLife(lesslife)
+	self.life = self.life - lesslife
+	print(self.life)
+end
+
+function player_mt:isInGoodDirection(x)
+	if self.left then
+		if x < self.x then return true
+		else return false
+		end
+	else 
+		if x > self.x then return true
+		else return false
+		end
+	end
+end
+
+function player_mt:punch()
+	--print("punch")
+	for i , v in ipairs(persos) do
+	--	print(v.number)
+		if not ( v == self ) then
+			local distance = math.abs(self.x - v.x)
+	--		print(distance)
+			if distance < punchDistance and self:isInGoodDirection(v.x) then
+				v:looseLife(punchDamage)
+			end
+		end
+	end
+end
+
+function player_mt:kick()
+	--print("kick")
+	for i , v in ipairs(persos) do
+	--	print(v.number)
+		if not ( v == self ) then
+			local distance = math.abs(self.x - v.x)
+	--		print(distance)
+			if distance < kickDistance and self:isInGoodDirection(v.x) then
+				v:looseLife(kickDamage)
+			end
+		end
 	end
 end
 
