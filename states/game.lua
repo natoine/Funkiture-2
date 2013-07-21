@@ -18,7 +18,6 @@ function state:init()
 	backgroundImageRatioX = love.graphics.getWidth() / backgroundImages[1]:getWidth()
 	imageRatio = backgroundImages[1]:getWidth() / backgroundImages[1]:getHeight()
 	
-	
 end
 
 
@@ -68,6 +67,7 @@ end
 
 function state:update(dt)
 	player.update(dt)
+	enemy.update(dt)
 end
 
 
@@ -82,6 +82,7 @@ function state:draw()
 	
 	-- game	
 	player.draw()
+	enemy.draw()
 	-- hud
 	if players[1] then 
 		huds[1]:draw(((love.graphics.getWidth()/4)-150)/2,70)
