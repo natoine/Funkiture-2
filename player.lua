@@ -130,16 +130,25 @@ function player_mt:update(dt)
 	local xintensity = intensity[1]
 	local lastX = self.x	
 	
-	if not(xintensity <= 0.2 and xintensity >= -0.2) then
-		self.x = self.x + self.speed * xintensity * dt
-	end
-	
-	
 	if xintensity < 0 then
 		self.left = true
 	else 
 		self.left = false
 	end 
+	
+	if not(xintensity <= 0.2 and xintensity >= -0.2) then
+	
+		-- on regarde si on peut aller a gauche
+		if self.left and (self.x - 64) > 0 then
+			self.x = self.x + self.speed * xintensity * dt
+		end
+	
+		-- on regarde si on peut aller à droite
+		if not (self.left) and (self.x + 64) < love.graphics.getWidth() then
+			self.x = self.x + self.speed * xintensity * dt
+		end
+	end
+		
 	--print(lastX - self.x)
 	--0.1seuil empririque TODO passer en variable 
 	if self.currentcycle == player.cycles.idle and ( lastX - self.x > 0.1 or lastX - self.x < -0.1) then
