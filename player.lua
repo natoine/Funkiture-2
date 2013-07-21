@@ -20,7 +20,7 @@ frametime = 1/10
 function player.new(number)
 	local self = setmetatable({},{__index = player_mt})
 	self.number = number
-	self.image = love.graphics.newImage("resources/textures/jackson"..number..".png")
+	self.image = love.graphics.newImage("resources/textures/jacksons/jackson"..number..".png")
 	self.currentcycle = player.cycles.idle
 	self.frame = 1
 	self.curframe = 1
