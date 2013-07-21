@@ -30,7 +30,7 @@ function love.load()
 	musics[2] = love.audio.newSource("Sounds/music2.mp3", "stream")
 	musics[3] = love.audio.newSource("Sounds/music3.mp3", "stream")
 	musics[4] = love.audio.newSource("Sounds/music4.mp3", "stream")
-	currentMusicIndex = math.floor(math.random(1, 4))
+	urrentMusicIndex = math.round(math.random(1, 4))
 	
 	love.audio.play(musics[currentMusicIndex])
 end
@@ -47,11 +47,16 @@ function love.update(dt)
 	gstate.update(dt)
 	if(musics[currentMusicIndex]:isStopped()) then
 		musics[currentMusicIndex]:rewind()
-		currentMusicIndex = math.floor(math.random(1, 5))
+		currentMusicIndex = math.round(math.random(1, 5))
 		love.audio.play(musics[currentMusicIndex])
 	end
 end
 
 function love.draw()
 	gstate.draw()
+end
+
+function math.round(num, idp)
+  local mult = 10^(idp or 0)
+  return math.floor(num * mult + 0.5) / mult
 end
