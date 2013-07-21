@@ -47,7 +47,7 @@ function love.update(dt)
 	gstate.update(dt)
 	if(musics[currentMusicIndex]:isStopped()) then
 		musics[currentMusicIndex]:rewind()
-		currentMusicIndex = math.round(math.random(1, 5))
+		currentMusicIndex = math.round(math.random(1, 4))
 		love.audio.play(musics[currentMusicIndex])
 	end
 end
