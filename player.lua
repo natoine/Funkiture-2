@@ -1,5 +1,7 @@
 local player_mt = {x = 100, speed = 50, life = 100, score = 0, combo = 0, left = false}
 local player = {}
+--local kickdamage = 10--
+--local punchdamage = 10--
 
 player.all = {}
 player.quad = {}
@@ -56,6 +58,18 @@ end
 function player_mt:isXButtonPressed()
 	return love.joystick.isDown(self.number, 3)
 end
+
+--function player_mt:setLife(x)
+	--self.life = self.life + x
+--end--
+
+--function player_mt:punchAttack(player)
+	--player:setLife(punchdamage)
+--end--
+
+--function player_mt:kickAttack(player)--
+--	player:setLife(kickdamage)--
+--end--
 
 function player.draw()
 	for i , v in ipairs(player.all) do
