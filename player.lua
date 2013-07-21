@@ -1,5 +1,7 @@
 local player_mt = {x = 100, speed = 50, life = 100, score = 0, combo = 0, left = false}
 local player = {}
+local kickSounds = {}
+local kickUntouchedSounds = {}
 --local kickdamage = 10--
 --local punchdamage = 10--
 
@@ -33,6 +35,16 @@ function player.new(number)
 	self.timer = 0
 	table.insert(player.all , self)
 	table.insert(persos, self)
+	
+	kickSounds[1] = love.audio.newSource("resources/Sounds/kick1.ogg", "static")
+	kickSounds[2] = love.audio.newSource("resources/Sounds/kick2.ogg", "static")
+	kickSounds[3] = love.audio.newSource("resources/Sounds/punch1.ogg", "static")
+	kickSounds[4] = love.audio.newSource("resources/Sounds/punch2.ogg", "static")
+	kickSounds[5] = love.audio.newSource("resources/Sounds/punch3.ogg", "static")
+	
+	kickUntouchedSounds[1] = love.audio.newSource("resources/Sounds/kickuntouched1.ogg", "static")
+	kickUntouchedSounds[2] = love.audio.newSource("resources/Sounds/kickuntouched2.ogg", "static")
+	kickUntouchedSounds[3] = love.audio.newSource("resources/Sounds/kickuntouched3.ogg", "static")
 	return self
 end
 
@@ -43,9 +55,18 @@ function player.update(dt)
 		local v = player.all[i]
 		if v.purge then
 			table.remove(player.all , i)
-			table.remove(persos, i)
 		else 
 			v:update(dt)
+			i = i + 1
+		end
+	end
+	i = 1
+	while i <= #persos do
+		local w = persos[i]
+		if w.purge then
+			table.remove(persos, i)
+		else 
+			--w:update(dt)
 			i = i + 1
 		end
 	end
@@ -55,6 +76,7 @@ end
 function player_mt:getDirection()
 	local abscisses = love.joystick.getAxis(self.number, 1)
 	local ordonnees = love.joystick.getAxis(self.number, 2)	
+	
 	return {abscisses , ordonnees}
 end
 
@@ -116,19 +138,33 @@ function player_mt:update(dt)
 	local intensity = self:getDirection()
 	local xintensity = intensity[1]
 	local lastX = self.x	
-	self.x = self.x + self.speed * xintensity * dt
+	
 	if xintensity < 0 then
 		self.left = true
 	else 
 		self.left = false
 	end 
+	
+	if not(xintensity <= 0.2 and xintensity >= -0.2) then
+	
+		-- on regarde si on peut aller a gauche
+		if self.left and (self.x - 64) > 0 then
+			self.x = self.x + self.speed * xintensity * dt
+		end
+	
+		-- on regarde si on peut aller à droite
+		if not (self.left) and (self.x + 64) < love.graphics.getWidth() then
+			self.x = self.x + self.speed * xintensity * dt
+		end
+	end
+		
 	--print(lastX - self.x)
-	--0.03 seuil empririque TODO passer en variable 
-	if self.currentcycle == player.cycles.idle and ( lastX - self.x > 0.03 or lastX - self.x < -0.03) then
+	--0.1seuil empririque TODO passer en variable 
+	if self.currentcycle == player.cycles.idle and ( lastX - self.x > 0.1 or lastX - self.x < -0.1) then
 		self.currentcycle = player.cycles.walk
 		self.curframe = 1
  	elseif self.currentcycle == player.cycles.walk then
-		if lastX - self.x < 0.03 and lastX - self.x > -0.03 then
+		if lastX - self.x < 0.1 and lastX - self.x > -0.1 then
 			self.currentcycle = player.cycles.idle
 			self.curframe = 1
 		end
@@ -176,8 +212,13 @@ function player_mt:punch()
 			local distance = math.abs(self.x - v.x)
 	--		print(distance)
 			if distance < punchDistance and self:isInGoodDirection(v.x) then
+				love.audio.play(kickSounds[math.round(math.random(1, #kickSounds))])
 				v:looseLife(punchDamage)
+			else
+				love.audio.play(kickUntouchedSounds[math.round(math.random(1, #kickUntouchedSounds))])
 			end
+		else
+			love.audio.play(kickUntouchedSounds[math.round(math.random(1, #kickUntouchedSounds))])
 		end
 	end
 end
@@ -190,8 +231,13 @@ function player_mt:kick()
 			local distance = math.abs(self.x - v.x)
 	--		print(distance)
 			if distance < kickDistance and self:isInGoodDirection(v.x) then
+				love.audio.play(kickSounds[math.round(math.random(1, #kickSounds))])
 				v:looseLife(kickDamage)
+			else
+				love.audio.play(kickUntouchedSounds[math.round(math.random(1, #kickUntouchedSounds))])
 			end
+		else
+			love.audio.play(kickUntouchedSounds[math.round(math.random(1, #kickUntouchedSounds))])
 		end
 	end
 end
