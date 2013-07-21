@@ -1,5 +1,9 @@
 local player_mt = {x = 100, speed = 50, life = 100, score = 0, combo = 0, left = false}
 local player = {}
+local kickSounds = {}
+local kickUntouchedSounds = {}
+--local kickdamage = 10--
+--local punchdamage = 10--
 
 player.all = {}
 player.quad = {}
@@ -31,6 +35,16 @@ function player.new(number)
 	self.timer = 0
 	table.insert(player.all , self)
 	table.insert(persos, self)
+	
+	kickSounds[1] = love.audio.newSource("resources/Sounds/kick1.ogg", "static")
+	kickSounds[2] = love.audio.newSource("resources/Sounds/kick2.ogg", "static")
+	kickSounds[3] = love.audio.newSource("resources/Sounds/punch1.ogg", "static")
+	kickSounds[4] = love.audio.newSource("resources/Sounds/punch2.ogg", "static")
+	kickSounds[5] = love.audio.newSource("resources/Sounds/punch3.ogg", "static")
+	
+	kickUntouchedSounds[1] = love.audio.newSource("resources/Sounds/kickuntouched1.ogg", "static")
+	kickUntouchedSounds[2] = love.audio.newSource("resources/Sounds/kickuntouched2.ogg", "static")
+	kickUntouchedSounds[3] = love.audio.newSource("resources/Sounds/kickuntouched3.ogg", "static")
 	return self
 end
 
@@ -63,8 +77,6 @@ end
 function player_mt:isXButtonPressed()
 	return love.joystick.isDown(self.number, 3)
 end
-
-
 
 function player.draw()
 	for i , v in ipairs(player.all) do
@@ -133,9 +145,6 @@ function player_mt:update(dt)
 			self.curframe = 1
 		end
 	end
-	if love.keyboard.isDown("right") then
-		self.x = self.x + self.speed * dt
-	end		
 end
 
 function player_mt:draw()
@@ -154,11 +163,9 @@ end
 
 function player_mt:looseLife(lesslife)
 	self.life = self.life - lesslife
-	print(self.life)
 	if self.life < 0 then
 		self.purge = true
 	end
-		
 end
 
 function player_mt:isInGoodDirection(x)
@@ -181,8 +188,13 @@ function player_mt:punch()
 			local distance = math.abs(self.x - v.x)
 	--		print(distance)
 			if distance < punchDistance and self:isInGoodDirection(v.x) then
+				love.audio.play(kickSounds[math.round(math.random(1, #kickSounds))])
 				v:looseLife(punchDamage)
+			else
+				love.audio.play(kickUntouchedSounds[math.round(math.random(1, #kickUntouchedSounds))])
 			end
+		else
+			love.audio.play(kickUntouchedSounds[math.round(math.random(1, #kickUntouchedSounds))])
 		end
 	end
 end
@@ -195,8 +207,13 @@ function player_mt:kick()
 			local distance = math.abs(self.x - v.x)
 	--		print(distance)
 			if distance < kickDistance and self:isInGoodDirection(v.x) then
+				love.audio.play(kickSounds[math.round(math.random(1, #kickSounds))])
 				v:looseLife(kickDamage)
+			else
+				love.audio.play(kickUntouchedSounds[math.round(math.random(1, #kickUntouchedSounds))])
 			end
+		else
+			love.audio.play(kickUntouchedSounds[math.round(math.random(1, #kickUntouchedSounds))])
 		end
 	end
 end

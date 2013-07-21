@@ -8,6 +8,9 @@ function love.load()
 
 	--import de player
 	player = require("player")
+	--import d'ennemis
+	enemy = require("enemy")
+	enemyTypes = {"builder" , "cowboy" , "indian"}
 	--import de hud--
 	hud = require("hud")
 
