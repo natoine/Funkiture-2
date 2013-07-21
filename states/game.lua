@@ -127,6 +127,8 @@ function state:draw()
 		huds[4]:draw((((love.graphics.getWidth()/4)-150)*7/2)+3*150,70)
 	end
 	
+	love.graphics.setColor(255, 0, 0)
+	
 	if #player.all == 0 then
 		love.graphics.draw(imageGameOver, (love.graphics.getWidth() / 2) - (512 / 2), (love.graphics.getHeight() / 2) - (256 / 2), 0, 1, 1, 0, 0)
 	end

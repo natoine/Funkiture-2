@@ -185,10 +185,11 @@ function player_mt:draw()
 	end
 end
 
-function player_mt:looseLife(lesslife)
+function player_mt:looseLife(lesslife, player)
 	self.life = self.life - lesslife
 	if self.life < 0 then
 		self.purge = true
+		player.score = player.score + 50
 	end
 end
 
@@ -213,7 +214,7 @@ function player_mt:punch()
 	--		print(distance)
 			if distance < punchDistance and self:isInGoodDirection(v.x) then
 				love.audio.play(kickSounds[math.round(math.random(1, #kickSounds))])
-				v:looseLife(punchDamage)
+				v:looseLife(punchDamage, self)
 			else
 				love.audio.play(kickUntouchedSounds[math.round(math.random(1, #kickUntouchedSounds))])
 			end
@@ -232,7 +233,7 @@ function player_mt:kick()
 	--		print(distance)
 			if distance < kickDistance and self:isInGoodDirection(v.x) then
 				love.audio.play(kickSounds[math.round(math.random(1, #kickSounds))])
-				v:looseLife(kickDamage)
+				v:looseLife(kickDamage, self)
 			else
 				love.audio.play(kickUntouchedSounds[math.round(math.random(1, #kickUntouchedSounds))])
 			end

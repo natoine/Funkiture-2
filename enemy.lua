@@ -1,4 +1,4 @@
-local enemy_mt = {x = 100, speed = 50, life = 100, score = 0, combo = 0, left = false}
+local enemy_mt = {x = 100, speed = 50, life = 10, score = 0, combo = 0, left = false}
 local enemy = {}
 local kickSounds = {}
 local kickUntouchedSounds = {}
@@ -229,11 +229,12 @@ function enemy_mt:draw()
 	end
 end
 
-function enemy_mt:looseLife(lesslife)
+function enemy_mt:looseLife(lesslife, player)
 	self.life = self.life - lesslife
 	print(self.number.."remaining life"..self.life)
 	if self.life <= 0 then
 		self.purge = true
+		player.score = player.score + 10
 	end
 end
 
@@ -257,7 +258,7 @@ function enemy_mt:punch()
 			local distance = math.abs(self.x - v.x)
 	--		print(distance)
 			if distance < punchDistance and self:isInGoodDirection(v.x) then
-				v:looseLife(punchDamage)
+				v:looseLife(punchDamage, self)
 				love.audio.play(kickSounds[math.round(math.random(1, #kickSounds))])
 			else
 				love.audio.play(kickUntouchedSounds[math.round(math.random(1, #kickUntouchedSounds))])
@@ -276,7 +277,7 @@ function enemy_mt:kick()
 			local distance = math.abs(self.x - v.x)
 	--		print(distance)
 			if distance < kickDistance and self:isInGoodDirection(v.x) then
-				v:looseLife(kickDamage)
+				v:looseLife(kickDamage, self)
 				love.audio.play(kickSounds[math.round(math.random(1, #kickSounds))])
 			else
 				love.audio.play(kickUntouchedSounds[math.round(math.random(1, #kickUntouchedSounds))])
