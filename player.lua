@@ -66,8 +66,6 @@ function player_mt:isXButtonPressed()
 	return love.joystick.isDown(self.number, 3)
 end
 
-
-
 function player.draw()
 	for i , v in ipairs(player.all) do
 		v:draw()
@@ -135,9 +133,6 @@ function player_mt:update(dt)
 			self.curframe = 1
 		end
 	end
-	if love.keyboard.isDown("right") then
-		self.x = self.x + self.speed * dt
-	end		
 end
 
 function player_mt:draw()
@@ -156,11 +151,9 @@ end
 
 function player_mt:looseLife(lesslife)
 	self.life = self.life - lesslife
-	print(self.life)
 	if self.life < 0 then
 		self.purge = true
 	end
-		
 end
 
 function player_mt:isInGoodDirection(x)
