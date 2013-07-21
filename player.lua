@@ -55,9 +55,18 @@ function player.update(dt)
 		local v = player.all[i]
 		if v.purge then
 			table.remove(player.all , i)
-			table.remove(persos, i)
 		else 
 			v:update(dt)
+			i = i + 1
+		end
+	end
+	i = 1
+	while i <= #persos do
+		local w = persos[i]
+		if w.purge then
+			table.remove(persos, i)
+		else 
+			--w:update(dt)
 			i = i + 1
 		end
 	end

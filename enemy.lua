@@ -62,15 +62,27 @@ function enemy.update(dt)
 			end
 		end
 	end
-	--kevin purge
+	--purge enemies
 	local i = 1
 	while i <= #enemy.all do
 		local v = enemy.all[i]
 		if v.purge then
+			--print("purge "..v.number)
 			table.remove(enemy.all , i)
-			table.remove(persos , i)
 		else 
 			v:update(dt)
+			i = i + 1
+		end
+	end
+	--purge persos
+	i = 1
+	while i <= #persos do
+		local w = persos[i]
+		if w.purge then
+			--print("purge "..w.number)
+			table.remove(persos , i)
+		else 
+			--w:update(dt)
 			i = i + 1
 		end
 	end
@@ -84,10 +96,10 @@ end
 
 function enemy_mt:update(dt)
 	
-	--tapera ou tapera pas
 	local nearestPlayerInfo = self:seekNearestPlayer()
-	if self.currentcycle == enemy.cycles.walk then
-		print("distance :"..nearestPlayerInfo[2])
+	--tapera ou tapera pas
+	if self.currentcycle == enemy.cycles.walk or self.currentcycle == enemy.cycles.idle then
+		--print("distance :"..nearestPlayerInfo[2])
 		if nearestPlayerInfo[2] < distanceBtwEnemies then
 			if ( nearestPlayerInfo[1] == 1 and self.left) or (nearestPlayerInfo[1] == -1 and not self.left) then
 				local testKick = math.random(1)
@@ -130,7 +142,10 @@ function enemy_mt:update(dt)
 	local lastX = self.x
 	if self.x >= love.graphics.getWidth() then
 		self.left = true
-	else	
+	elseif self.x <= 0 then
+		self.left = false
+	end
+	if nearestPlayerInfo[2] > distanceBtwEnemies then
 		local intensity = self:getDirection()
 		local xintensity = intensity[1]	
 		self.x = self.x + self.speed * xintensity * dt
@@ -193,7 +208,8 @@ end
 
 function enemy_mt:looseLife(lesslife)
 	self.life = self.life - lesslife
-	if self.life < 0 then
+	print(self.number.."remaining life"..self.life)
+	if self.life <= 0 then
 		self.purge = true
 	end
 end
