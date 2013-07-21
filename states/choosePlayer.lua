@@ -58,22 +58,22 @@ function state:joystickpressed(joystick, button)
 		if player1 and joystick == 1 then
 			j1Ready = true
 			players[1] = player.new(1)
-			huds[1] = hud.new(players[1])
+			huds[1] = hud.newplayer(players[1])
 		end
 		if player2 and joystick == 2 then
 			j2Ready = true
 			players[2] = player.new(2)
-			huds[2] = hud.new(players[2])
+			huds[2] = hud.newplayer(players[2])
 		end
 		if player3 and joystick == 3 then
 			j3Ready = true
 			players[3] = player.new(3)
-			huds[3] = hud.new(players[3])
+			huds[3] = hud.newplayer(players[3])
 		end
 		if player4 and joystick == 4 then
 			j4Ready = true
 			players[4] = player.new(4)
-			huds[4] = hud.new(players[4])
+			huds[4] = hud.newplayer(players[4])
 		end
 	end
 	-- Tester si tous les joueurs sont prêts pour lancer la partie
