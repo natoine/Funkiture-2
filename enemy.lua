@@ -91,11 +91,11 @@ function enemy.update(dt)
 			i = i + 1
 		end
 	end
-
+	--purge hud
 	i = 1
 	while i <= #hudenemies do
 		local u = hudenemies[i]
-		if u.purge then
+		if u.enemy.purge then
 			table.remove(hudenemies , i)
 		else 
 			i = i + 1
